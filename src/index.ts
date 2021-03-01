@@ -4,6 +4,7 @@ import cors from 'cors';
 import routes from './routes';
 import './database';
 import 'reflect-metadata';
+import upload from './config/upload';
 
 const app = express();
 
@@ -26,7 +27,7 @@ const whitelist = [
 
 dotenv.config();
 app.use(express.json());
-
+app.use('/files', express.static(upload.director));
 app.use(routes);
 
 app.listen(3333, () => {
