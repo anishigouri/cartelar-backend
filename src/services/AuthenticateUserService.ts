@@ -28,9 +28,9 @@ export default class AuthenticateUserService {
       throw new Error('E-mail ou senha incorretos.');
     }
 
-    const token = sign({}, 'fea11c26e396b554e70af27830e94115', {
+    const token = sign({}, process.env.JWT_SECRET, {
       subject: user.id,
-      expiresIn: '1d',
+      expiresIn: process.env.EXPIRE_IN,
     });
 
     return { user, token };
