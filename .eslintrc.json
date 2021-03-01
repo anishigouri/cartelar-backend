@@ -18,6 +18,8 @@
         "prettier"
     ],
     "rules": {
+      "class-methods-use-this": "off",
+      "camelcase": "off",
       "prettier/prettier": "error",
       "no-use-before-define": "off",
       "@typescript-eslint/no-use-before-define": [

@@ -1,13 +1,12 @@
+import { EntityRepository, Repository } from 'typeorm';
 import User from '../models/User';
 
-class UserRepository {
-  private users: User[];
+class UserRepository extends Repository<User> {
+  public async findByUsername(username: string): Promise<User | null> {
+    const findUser = await this.findOne({ where: username });
 
-  constructor() {
-    this.users = [];
-  }
-
-  public create(user: User): User | null {
-    return this.users.find(u => user.username === u.username) || null;
+    return findUser || null;
   }
 }
+
+export default UserRepository;
