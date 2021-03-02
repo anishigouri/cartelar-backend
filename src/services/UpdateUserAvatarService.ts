@@ -1,22 +1,31 @@
-import { getRepository } from 'typeorm';
 import path from 'path';
 import fs from 'fs';
-import User from '../models/User';
+import User from '@entities/User';
+import AppError from '@errors/AppError';
+import IUserRepository from '@repositories/IUserRepository';
+import { injectable, inject } from 'tsyringe';
 import uploadConfig from '../config/upload';
 
-interface Request {
+interface IRequest {
   user_id: string;
   avatarFilename: string;
 }
 
+@injectable()
 export default class UpdateUserAvatarService {
-  public async execute({ user_id, avatarFilename }: Request): Promise<User> {
-    const userRepository = getRepository(User);
+  constructor(
+    @inject('UserRepository')
+    private userRepository: IUserRepository,
+  ) {}
 
-    const user = await userRepository.findOne(user_id);
+  public async execute({ user_id, avatarFilename }: IRequest): Promise<User> {
+    const user = await this.userRepository.findById(user_id);
 
     if (!user) {
-      throw new Error('Necessário estar autenticado para trocar a foto');
+      throw new AppError(
+        'Necessário estar autenticado para trocar a foto',
+        403,
+      );
     }
 
     if (user.avatar) {
@@ -29,7 +38,7 @@ export default class UpdateUserAvatarService {
     }
     user.avatar = avatarFilename;
 
-    await userRepository.save(user);
+    await this.userRepository.save(user);
 
     return user;
   }

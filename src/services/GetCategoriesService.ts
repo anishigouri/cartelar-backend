@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import Category from '../models/Category';
+import AppError from '@errors/AppError';
+import Category from '@entities/Category';
 
 class GetCategoriesService {
   private categories: Category[];
@@ -24,7 +25,10 @@ class GetCategoriesService {
       );
     } catch (err) {
       console.error(err);
-      throw Error('Tivemos um problema, tente novamente mais tarde');
+      throw new AppError(
+        'Tivemos um problema, tente novamente mais tarde',
+        401,
+      );
     }
 
     this.categories = resCategoria.data.filter(
@@ -32,7 +36,7 @@ class GetCategoriesService {
     );
 
     if (!this.categories) {
-      throw Error('Nenhuma categoria encontrada');
+      throw new AppError('Nenhuma categoria encontrada', 401);
     }
 
     return this.categories;

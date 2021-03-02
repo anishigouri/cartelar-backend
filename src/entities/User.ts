@@ -8,6 +8,12 @@ import {
 
 @Entity('users')
 export default class User {
+  constructor(name: string, email: string, password: string) {
+    this.name = name;
+    this.email = email;
+    this.password = password;
+  }
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

@@ -1,36 +1,34 @@
 import { hash } from 'bcryptjs';
-import { CannotExecuteNotConnectedError, getRepository } from 'typeorm';
+import User from '@entities/User';
+import AppError from '@errors/AppError';
+import IUserRepository from '@repositories/IUserRepository';
+import { injectable, inject } from 'tsyringe';
 
-import User from '../models/User';
-import UserRepository from '../repositories/user';
-
-interface Request {
+interface IRequest {
   name: string;
   email: string;
   password: string;
 }
 
+@injectable()
 export default class CreateUsersService {
-  public async execute({ name, email, password }: Request): Promise<User> {
-    const usersRepository = getRepository(User);
+  constructor(
+    @inject('UserRepository')
+    private userRepository: IUserRepository,
+  ) {}
 
-    const checkUserExist = await usersRepository.findOne({
-      where: { email },
-    });
+  public async execute({ name, email, password }: IRequest): Promise<User> {
+    const checkUserExist = await this.userRepository.findByEmail(email);
 
     if (checkUserExist) {
-      throw new Error('Já existe um usuário com esse e-mail.');
+      throw new AppError('Já existe um usuário com esse e-mail.');
     }
 
     const hashedPass = await hash(password, 8);
 
-    const user = usersRepository.create({
-      name,
-      email,
-      password: hashedPass,
-    });
+    const newUser = new User(name, email, hashedPass);
 
-    await usersRepository.save(user);
+    const user = await this.userRepository.save(newUser);
 
     return user;
   }

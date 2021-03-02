@@ -6,7 +6,7 @@
   "password": "postgres",
   "database": "cartelar",
   "entities": [
-    "./src/models/*.ts"
+    "./src/entities/*.ts"
   ],
   "migrations": [
     "./src/database/migrations/*.ts"
