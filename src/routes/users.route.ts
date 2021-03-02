@@ -14,6 +14,10 @@ usersRouter.post('/', usersController.save);
 
 usersRouter.get('/:id', usersController.findById);
 
+usersRouter.get('/forgot-password/:email', usersController.forgotPassword);
+
+usersRouter.post('/reset-password', usersController.resetPassword);
+
 usersRouter.patch(
   '/avatar',
   ensureAuthenticated,

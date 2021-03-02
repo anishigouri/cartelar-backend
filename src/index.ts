@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
-// import cors from 'cors';
+import cors from 'cors';
 import 'express-async-errors';
 import './database';
 import 'reflect-metadata';
@@ -11,23 +11,7 @@ import routes from './routes';
 import './container';
 
 const app = express();
-
-// const whitelist = [
-//   'https://cartelar-frontend.herokuapp.com',
-//   'http://localhost:3000',
-// ];
-
-// const corsOptions = {
-//   origin(origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-// };
-
-// app.use(cors(corsOptions));
+app.use(cors());
 
 dotenv.config();
 app.use(express.json());
